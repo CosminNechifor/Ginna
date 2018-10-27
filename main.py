@@ -38,10 +38,30 @@ def echo(bot, update):
         text=update.message.text,
     )
 
-def monitor(bot, update):
-    logger.info('monitor was called')
-    message_text = update.message.text[18:].split(" ")
-    logger.info(message_text)
+def check_server(bot, job):
+    chat_id, hosts = job.context[0], job.context[1] 
+    for hostname in hosts:
+        response = os.system("ping -c 1 " + hostname)
+        if response == 0:
+            bot.send_message(
+                chat_id=chat_id,
+                text=f"{hostname} is up",
+            )
+
+
+def start_monitoring(bot, update, job_queue):
+    logger.info('Start monitoring was called')
+    # replace this part with regex
+    message_text = update.message.text[18:].split(' ')
+    message_text.remove('')
+    context = [update.message.chat_id, message_text]
+    job_queue.run_repeating(
+        check_server, 
+        interval=3, 
+        first=0, 
+        context=context,
+    )
+
 
 if __name__ == '__main__':
 
@@ -49,19 +69,21 @@ if __name__ == '__main__':
 
     updater = Updater(
         token=token,
+        workers=10,
     )
     dispatcher = updater.dispatcher
 
     start_handler = CommandHandler('start', start)
-    monitor_handler = CommandHandler('start_monitoring', monitor)     
-
+    start_monitoring_handler = CommandHandler('start_monitoring', 
+        start_monitoring, 
+        pass_job_queue=True,
+    )     
 
     echo_handler = MessageHandler(Filters.text, echo)
 
-
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(echo_handler)
-    dispatcher.add_handler(monitor_handler)
+    dispatcher.add_handler(start_monitoring_handler)
 
     updater.start_polling()
     # updater.stop()
