@@ -10,3 +10,4 @@ def check_server(bot, job):
                 chat_id=chat_id,
                 text=f"{hostname} IS DOWN",
             )
+
