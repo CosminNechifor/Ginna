@@ -13,9 +13,11 @@ Will be developed after most of the features are implemented.
 - Create Issues for every task that has to be implemented before starting working on it
 - Give weather status on demand
 - Perform requests to different webservices and return the text to the group chat that asked for the following requests
+- Implement a request command to test services that are being developed
 - Monitor different webservices on demand
 - Auto respawn services (that were given as arguments)
 - Create a CLI with the required options
+- Code refactor
 - Create a testing moodule
 - Create ``How to install ``
 - Automate deployment
