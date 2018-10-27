@@ -35,9 +35,12 @@ def echo(bot, update):
 def start_monitoring(bot, update, job_queue):
     ''' start_monitoring <server1> <server2>...'''
     logger.info('Start monitoring was called')
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text='I started the monitoring process.',
+    )
     # replace this part with regex
     message_text = update.message.text[18:].split(' ')
-    message_text.remove('')
     context = (update.message.chat_id, message_text)
     job_queue.run_repeating(
         check_server,
