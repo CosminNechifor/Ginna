@@ -24,20 +24,24 @@ def get_token():
 
 
 def start(bot, update):
-    logger.critical('start')
+    logger.info('start')
     bot.send_message(
         chat_id=update.message.chat_id,
-        text="I'm a bot, please talk to me!",
+        text="Hi there, I'm Ginna",
     )
 
 
 def echo(bot, update):
-    logger.critical('echo')
+    logger.info('echo')
     bot.send_message(
         chat_id=update.message.chat_id,
         text=update.message.text,
     )
 
+def monitor(bot, update):
+    logger.info('monitor was called')
+    message_text = update.message.text[18:].split(" ")
+    logger.info(message_text)
 
 if __name__ == '__main__':
 
@@ -49,10 +53,15 @@ if __name__ == '__main__':
     dispatcher = updater.dispatcher
 
     start_handler = CommandHandler('start', start)
+    monitor_handler = CommandHandler('start_monitoring', monitor)     
+
+
     echo_handler = MessageHandler(Filters.text, echo)
+
 
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(echo_handler)
+    dispatcher.add_handler(monitor_handler)
 
     updater.start_polling()
     # updater.stop()
