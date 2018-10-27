@@ -5,7 +5,10 @@ from telegram.ext import CommandHandler
 from telegram.ext import Updater
 from telegram.ext import MessageHandler, Filters
 
-from jobs import check_server
+from jobs import (
+    check_server,
+    check_ws,
+)
 from tools import get_token
 
 
@@ -36,11 +39,12 @@ def echo(bot, update):
 
 
 def start_monitoring(bot, update, job_queue):
+    ''' start_monitoring <server1> <server2>...'''
     logger.info('Start monitoring was called')
     # replace this part with regex
     message_text = update.message.text[18:].split(' ')
     message_text.remove('')
-    context = [update.message.chat_id, message_text]
+    context = (update.message.chat_id, message_text)
     job_queue.run_repeating(
         check_server,
         interval=3,
@@ -50,6 +54,7 @@ def start_monitoring(bot, update, job_queue):
 
 
 def perform_get_request(bot, update):
+    '''Command: /perform_get_request <endpoint>'''
     logger.info('Perform request was called')
     bot.send_message(
         chat_id=update.message.chat_id,
@@ -60,12 +65,30 @@ def perform_get_request(bot, update):
     url = url[0]
     r = requests.get(url)
     # this can be replaced, but for the moment it returns only the status code
-    response_message = f'Status code: {r.status_code}\n' 
+    response_message = f'Status code: {r.status_code}\n'
     bot.send_message(
         chat_id=update.message.chat_id,
         text=response_message,
     )
-    
+
+
+def start_healthcheck_ws(bot, update, job_queue):
+    '''
+        Epects the ip/url to the ping endpoints
+        command: /hc_ws <webs1> <webs2> <webs3>
+    '''
+
+    logger.info('Checking web services called')
+    # TODO: replace this part with regex
+    message_text = update.message.text[7:].split(' ')
+    context = (update.message.chat_id, message_text)
+    job_queue.run_repeating(
+        check_ws,
+        interval=3,
+        first=0,
+        context=context,
+    )
+
 
 if __name__ == '__main__':
 
@@ -90,12 +113,19 @@ if __name__ == '__main__':
         perform_get_request,
     )
 
+    check_ws_periodically = CommandHandler(
+        'hc_ws',
+        start_healthcheck_ws,
+        pass_job_queue=True,
+    )
+
     echo_handler = MessageHandler(Filters.text, echo)
 
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(echo_handler)
     dispatcher.add_handler(start_monitoring_handler)
     dispatcher.add_handler(perform_get_request_handler)
+    dispatcher.add_handler(check_ws_periodically)
 
     updater.start_polling()
     # updater.stop()
