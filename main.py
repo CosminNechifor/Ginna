@@ -1,4 +1,5 @@
 import logging
+import requests
 
 from telegram.ext import CommandHandler
 from telegram.ext import Updater
@@ -48,6 +49,24 @@ def start_monitoring(bot, update, job_queue):
     )
 
 
+def perform_get_request(bot, update):
+    logger.info('Perform request was called')
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text="Performing request",
+    )
+    url = update.message.text[20:].split(' ')
+    url.remove('')
+    url = url[0]
+    r = requests.get(url)
+    # this can be replaced, but for the moment it returns only the status code
+    response_message = f'Status code: {r.status_code}\n' 
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text=response_message,
+    )
+    
+
 if __name__ == '__main__':
 
     token = get_token()
@@ -59,10 +78,16 @@ if __name__ == '__main__':
     dispatcher = updater.dispatcher
 
     start_handler = CommandHandler('start', start)
+
     start_monitoring_handler = CommandHandler(
         'start_monitoring',
         start_monitoring,
         pass_job_queue=True,
+    )
+
+    perform_get_request_handler = CommandHandler(
+        'perform_get_request',
+        perform_get_request,
     )
 
     echo_handler = MessageHandler(Filters.text, echo)
@@ -70,6 +95,7 @@ if __name__ == '__main__':
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(echo_handler)
     dispatcher.add_handler(start_monitoring_handler)
+    dispatcher.add_handler(perform_get_request_handler)
 
     updater.start_polling()
     # updater.stop()

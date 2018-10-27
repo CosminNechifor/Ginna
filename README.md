@@ -11,7 +11,7 @@ Will be developed after most of the features are implemented.
 ## TODO
 
 - Create Issues for every task that has to be implemented before starting working on it
-- Check if server is reachable 
+- ~~Check if server is reachable~~ implemented in #2 
 - Give weather status on demand
 - Perform requests to different webservices and return the text to the group chat that asked for the following requests
 - Implement a request command to test services that are being developed
