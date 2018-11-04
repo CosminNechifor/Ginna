@@ -84,3 +84,16 @@ def start_healthcheck_ws(bot, update, job_queue):
         first=0,
         context=context,
     )
+
+
+def stop_healthcheck_ws(bot, update, job_queue):
+    '''
+        Stops the WS healthcheck
+    '''
+    logger.info('Stoping WS healthcheck')
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text="Stoping ws"
+    )
+    for job in job_queue.get_jobs_by_name('check_ws'):
+        job.schedule_removal()

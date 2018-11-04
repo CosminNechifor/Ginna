@@ -9,6 +9,7 @@ from handlers import (
     start_monitoring,
     perform_get_request,
     start_healthcheck_ws,
+    stop_healthcheck_ws,
     echo,
 )
 
@@ -42,6 +43,12 @@ if __name__ == '__main__':
         pass_job_queue=True,
     )
 
+    handler_stop_healthcheck_ws = CommandHandler(
+        'stop_hc_ws',
+        stop_healthcheck_ws,
+        pass_job_queue=True,
+    )
+
     echo_handler = MessageHandler(Filters.text, echo)
 
     dispatcher.add_handler(start_handler)
@@ -49,5 +56,6 @@ if __name__ == '__main__':
     dispatcher.add_handler(start_monitoring_handler)
     dispatcher.add_handler(perform_get_request_handler)
     dispatcher.add_handler(check_ws_periodically)
+    dispatcher.add_handler(handler_stop_healthcheck_ws)
 
     updater.start_polling()
