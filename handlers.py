@@ -7,8 +7,8 @@ from jobs import (
     check_ws,
 )
 from tools import (
-    save_to_notes,
-    read_from_notes,
+    save_to_note,
+    read_from_note,
 )
 
 logging.basicConfig(
@@ -109,7 +109,7 @@ def save_note(bot, update):
         text='I added what you asked in notes.',
     )
     message_text = update.message.text[6:]
-    save_to_notes(message_text)
+    save_to_note(message_text)
 
 
 def read_note(bot, update):
@@ -118,7 +118,7 @@ def read_note(bot, update):
         chat_id=update.message.chat_id,
         text='Printing notes'
     )
-    notes_text = read_from_notes() 
+    notes_text = read_note() 
     bot.send_message(
         chat_id=update.message.chat_id,
         text=notes_text,
