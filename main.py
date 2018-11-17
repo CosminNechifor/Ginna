@@ -56,8 +56,8 @@ if __name__ == '__main__':
         save_note,
     )
     read_note_handler = CommandHandler(
-        'note',
-        save_note,
+        'read',
+        read_note,
     )
 
     echo_handler = MessageHandler(Filters.text, echo)
