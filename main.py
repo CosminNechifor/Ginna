@@ -10,6 +10,8 @@ from handlers import (
     perform_get_request,
     start_healthcheck_ws,
     stop_healthcheck_ws,
+    save_note, 
+    read_note, 
     echo,
 )
 
@@ -49,9 +51,20 @@ if __name__ == '__main__':
         pass_job_queue=True,
     )
 
+    write_note_handler = CommandHandler(
+        'note',
+        save_note,
+    )
+    read_note_handler = CommandHandler(
+        'note',
+        save_note,
+    )
+
     echo_handler = MessageHandler(Filters.text, echo)
 
     dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(write_note_handler)
+    dispatcher.add_handler(read_note_handler)
     dispatcher.add_handler(echo_handler)
     dispatcher.add_handler(start_monitoring_handler)
     dispatcher.add_handler(perform_get_request_handler)
