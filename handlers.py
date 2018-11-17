@@ -6,7 +6,10 @@ from jobs import (
     check_server,
     check_ws,
 )
-
+from tools import (
+    save_to_note,
+    read_from_note,
+)
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -97,3 +100,26 @@ def stop_healthcheck_ws(bot, update, job_queue):
     )
     for job in job_queue.get_jobs_by_name('check_ws'):
         job.schedule_removal()
+
+
+def save_note(bot, update):
+    logger.info('Adding to you notes')
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text='I added what you asked in notes.',
+    )
+    message_text = update.message.text[6:]
+    save_to_note(message_text)
+
+
+def read_note(bot, update):
+    logger.info('Reading your notes')    
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text='Printing notes'
+    )
+    notes_text = read_note() 
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text=notes_text,
+    )
