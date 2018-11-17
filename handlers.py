@@ -109,16 +109,20 @@ def save_note(bot, update):
         text='I added what you asked in notes.',
     )
     message_text = update.message.text[6:]
-    save_to_notes(message_text)
+    last = update.message.from_user.last_name
+    first = update.message.from_user.first_name
+    save_to_notes((first, last, message_text))
 
 
 def read_note(bot, update):
-    logger.info('Reading your notes')    
+    logger.info('Reading your notes')
     bot.send_message(
         chat_id=update.message.chat_id,
         text='Printing notes'
     )
-    notes_text = read_from_notes() 
+    last = update.message.from_user.last_name
+    first = update.message.from_user.first_name
+    notes_text = read_from_notes((first, last))
     bot.send_message(
         chat_id=update.message.chat_id,
         text=notes_text,

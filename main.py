@@ -10,8 +10,8 @@ from handlers import (
     perform_get_request,
     start_healthcheck_ws,
     stop_healthcheck_ws,
-    save_note, 
-    read_note, 
+    save_note,
+    read_note,
     echo,
 )
 
