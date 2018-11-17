@@ -18,5 +18,8 @@ def save_to_notes(msg):
 def read_from_notes(user):
     first_name, last_name = user
     file_name = first_name + '_' + last_name + '.txt'
-    with open(file_name, 'r') as file:
-        return file.read()
+    try:
+        with open(file_name, 'r') as file:
+            return file.read()
+    except Exception:
+        return "No content"
