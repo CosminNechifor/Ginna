@@ -24,3 +24,4 @@ RUN cd Ginna \
 WORKDIR /Ginna
 
 ENTRYPOINT ["Ginna"]
+# test ssh key
